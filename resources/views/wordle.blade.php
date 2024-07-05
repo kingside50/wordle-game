@@ -87,7 +87,7 @@
             </script>
 
            <!-- Toon resultaten van de gok -->
-@isset($result)
+           @isset($result)
     @if ($result === 'correct')
         <div class="word-display">
             <h2>Guess: {{ $guess }}</h2>
@@ -102,22 +102,18 @@
         <div class="word-display">
             <h2>Guess: {{ $guess }}</h2>
             @foreach (str_split($guess) as $index => $letter)
-    @php
-        $colorClass = '';
-        if (isset($result[$index])) {
-            if ($result[$index] === 'correct') {
-                $colorClass = 'bg-success';
-            } elseif ($result[$index] === 'present') {
-                $colorClass = 'bg-warning';
-            } else {
-                $colorClass = 'bg-danger';
-            }
-        } else {
-            $colorClass = 'bg-danger'; // Stel standaardkleur in als geen resultaat beschikbaar is voor de letter
-        }
-    @endphp
-    <div class="letter-box {{ $colorClass }}">{{ $letter }}</div>
-@endforeach
+                @php
+                    $colorClass = '';
+                    if ($result[$index] === 'correct') {
+                        $colorClass = 'bg-success';
+                    } elseif ($result[$index] === 'present') {
+                        $colorClass = 'bg-warning';
+                    } else {
+                        $colorClass = 'bg-danger';
+                    }
+                @endphp
+                <div class="letter-box {{ $colorClass }}">{{ $letter }}</div>
+            @endforeach
         </div>
     @endif
 @endisset
