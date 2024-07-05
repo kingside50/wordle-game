@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Score;
 use App\Models\Guess;
+use App\Models\Friend;
 
 class WordleController extends Controller
 {
@@ -15,7 +16,10 @@ class WordleController extends Controller
     {
         $user = Auth::user();
 
-        // Choose a random word if it is not set in the session
+        // Haal de vrienden van de huidige gebruiker op
+        $friends = $user->friends()->with('friend')->get();
+
+        // Kies een willekeurig woord als het niet is ingesteld in de sessie
         if (!session()->has('wordle_word')) {
             $this->chooseRandomWord();
         }
@@ -28,6 +32,7 @@ class WordleController extends Controller
             'user' => $user,
             'pastGuesses' => $pastGuesses,
             'word' => session('wordle_word'),
+            'friends' => $friends, // Voeg vrienden toe aan de view
         ]);
     }
 
@@ -113,4 +118,21 @@ class WordleController extends Controller
             return 'incorrect';
         }
     }
+    public function dashboard()
+{
+    $user = Auth::user();
+
+    // Retrieve the user's friends
+    $friends = $user->friends()->with('friend')->get();
+
+    // Retrieve the leaderboard scores for friends
+    $friendScores = Score::whereIn('user_id', $friends->pluck('friend_id'))->orderBy('correct_guesses', 'desc')->get();
+
+    return view('dashboard', [
+        'user' => $user,
+        'friends' => $friends,
+        'friendScores' => $friendScores,
+    ]);
 }
+}
+

@@ -45,7 +45,11 @@
 <body>
     <div class="container">
         <h1 class="mt-5 mb-4">Wordle Game</h1>
+<!-- Check if user is authenticated -->
+@auth
 
+    <a href="{{ route('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+@endauth
         @auth
             <p>Welcome, {{ Auth::user()->name }}!</p>
 <!-- Toon eventuele succesberichten -->
